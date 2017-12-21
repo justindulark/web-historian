@@ -14,7 +14,6 @@ exports.paths = {
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt')
 };
-
 // Used for stubbing paths for tests, do not modify
 exports.initialize = function(pathsObj) {
   _.each(pathsObj, function(path, type) {
@@ -24,18 +23,50 @@ exports.initialize = function(pathsObj) {
 
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
-
+// fs.readFile('/etc/passwd', (err, data) => {
+//   if (err) throw err;
+//   console.log(data);
+// });
 exports.readListOfUrls = function(callback) {
+  fs.readFile(exports.paths.list, 'utf8', (err, data) => {
+    if (err) {
+      throw err;
+    }
+    callback(data.split('\n'));
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
+  fs.readFile(exports.paths.list, 'utf8', (err, data) => {
+    if (err) {
+      throw err;
+    }
+    callback(data.split('\n').indexOf(url) !== -1);
+  });
 };
 
 exports.addUrlToList = function(url, callback) {
+  //needs to be entered with a new line, write test about this
+  fs.appendFile(exports.paths.list, url + '\n', (err) => {
+    if (err) {
+      throw err;
+    }
+    callback('done');
+  });
 };
 
 exports.isUrlArchived = function(url, callback) {
+  fs.access(exports.paths.archivedSites + '/' + url, (err) => {
+    callback(err ? false : true);
+  });
 };
 
 exports.downloadUrls = function(urls) {
+  urls.forEach((url) => {
+    fs.appendFile(exports.paths.archivedSites + '/' + url, 'test', (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  });
 };
