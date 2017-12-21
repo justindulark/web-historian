@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var request = require('request');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -63,10 +64,29 @@ exports.isUrlArchived = function(url, callback) {
 
 exports.downloadUrls = function(urls) {
   urls.forEach((url) => {
-    fs.appendFile(exports.paths.archivedSites + '/' + url, 'test', (err) => {
-      if (err) {
-        throw err;
-      }
+    request(url, function(error, response, body) {
+      fs.appendFile(exports.paths.archivedSites + '/' + url, body, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
     });
   });
 };
+
+
+
+/*
+
+request('http://www.google.com', function (error, response, body) {
+  console.log('error:', error); // Print the error if one occurred
+  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+  console.log('body:', body); // Print the HTML for the Google homepage.
+});
+*/
+
+
+
+
+
+
