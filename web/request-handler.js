@@ -34,7 +34,6 @@ exports.handleRequest = function (req, res) {
   }
   if (req.method === 'GET') {
     if (req.url === '/styles.css') {
-      console.log('req url is styles.css');
       fs.readFile(archive.paths.siteAssets + '/styles.css', 'utf8', (err, data) => {
         if (err) {
           throw err;

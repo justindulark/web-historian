@@ -62,14 +62,12 @@ exports.isUrlArchived = function(url, callback) {
   });
 };
 
-exports.downloadUrls = function(urls) {
-  urls.forEach((url) => {
-    request(url, function(error, response, body) {
-      fs.appendFile(exports.paths.archivedSites + '/' + url, body, (err) => {
-        if (err) {
-          throw err;
-        }
-      });
+exports.downloadUrls = function(url) {
+  request('http://www.' + url, function(error, response, body) {
+    fs.writeFile(exports.paths.archivedSites + '/' + url, body.toString('utf8'), (err) => {
+      if (err) {
+        throw err;
+      }
     });
   });
 };
