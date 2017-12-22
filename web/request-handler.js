@@ -16,20 +16,21 @@ exports.handleRequest = function (req, res) {
           //jquery is client side, find node way to change html
           httpHelp.serveAssets(res, result, 302);
         } else {
-          if (!archive.isUrlInList(result)) {
-            archive.addUrlToList(result);
-          }
+          archive.isUrlInList(result, function(urlInList) {
+            if (!urlInList) {
+              archive.addUrlToList(result, () => {});
+            }
+          });
           fs.readFile(archive.paths.siteAssets + '/loading.html', 'utf8', (err, data) => {
             if (err) {
               throw err;
-            }
+            }   
             res.writeHead(302, httpHelp.headers);
             res.end(data);
           });
         }
       });
     }); 
-
   }
   if (req.method === 'GET') {
     if (req.url === '/styles.css') {
